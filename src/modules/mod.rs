@@ -21,3 +21,4 @@ pub mod collision;
 pub mod scale;
 pub mod messagebox;
 pub mod player;
+pub mod mwall;

@@ -1,10 +1,15 @@
 use macroquad::prelude::*;
+use crate::modules::mwall::mwall;
 use crate::modules::still_image::StillImage;
 use crate::modules::label::Label;
 use crate::modules::text_button::TextButton;
 use crate::modules::messagebox::{MessageBox, MessageBoxResult};
 use crate::modules::scale::use_virtual_resolution;
 use crate::modules::player::Player;
+//TO DOOOO
+//1. add preloading
+//2. add goal with key and door
+//3. add mwall
 
 pub async fn run() -> String {
     // Define virtual resolution constants
@@ -12,6 +17,7 @@ pub async fn run() -> String {
     const VIRTUAL_HEIGHT: f32 = 768.0;
     //images
     let mut player = Player::new("assets/king.png", 30.0, 30.0).await;
+    let mut mwall = mwall::new("assets/end.png", 10.0, 130.0, 900.0, 290.0).await;
     let maze = StillImage::new(
     "assets/maze.png",
     VIRTUAL_WIDTH,  // width
@@ -57,6 +63,7 @@ pub async fn run() -> String {
     let mut lbl_time_num = Label::new("0", 965.0, 40.0, 30);
     //message box
     let mut end_box = MessageBox::info("Level Clear!", "You Beat The Maze!");
+    let wallfirstpos = mwall.get_firstpos();
     loop {
         // Apply virtual resolution every frame
         use_virtual_resolution(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
@@ -64,6 +71,7 @@ pub async fn run() -> String {
         
         // Only process input if message box is NOT visible
         if !end_box.is_visible() {
+            //PLAYER MOVEMENT AND COLLISION CHECKING
             let oldpos = player.get_oldpos(); // Store old position before movement
             player.handle_keypresses();
             if player.move_and_check_x(&maze) {
@@ -74,6 +82,7 @@ pub async fn run() -> String {
                 println!("Collision on Y axis");
                 player.set_y(oldpos.y);
             };
+            mwall.move_updown(wallfirstpos);
         }
         if btn_return.click() {
             return "screen1".to_string();
@@ -82,6 +91,7 @@ pub async fn run() -> String {
         lbl_time_num.set_text(currenttime);
         maze.draw();
         player.draw();
+        mwall.draw();
         end.draw();
         wall.draw();
         lbl_time_num.draw();
