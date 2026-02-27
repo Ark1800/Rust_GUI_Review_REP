@@ -3,7 +3,6 @@ use crate::modules::still_image::StillImage;
 use crate::modules::label::Label;
 use crate::modules::text_button::TextButton;
 use crate::modules::messagebox::{MessageBox, MessageBoxResult};
-use crate::modules::collision::check_collision;
 use crate::modules::scale::use_virtual_resolution;
 use crate::modules::player::Player;
 
@@ -65,31 +64,16 @@ pub async fn run() -> String {
         
         // Only process input if message box is NOT visible
         if !end_box.is_visible() {
-            let old_pos = vec2(player.view_player().get_x(), player.view_player().get_y());
-                let movement_x = player.move_player_x();
-                let movement_y = player.move_player_y();
-                //x collision
-                if movement_x != 0.0 { // Only check x collision if there was horizontal movement
-                    if check_collision(player.view_player(), &maze, 1) {
-                        player.set_oldpos(old_pos.x, 0.0, 0); // Undo if collision happens
-                    }
-                    if check_collision(player.view_player(), &wall, 1) {
-                        player.set_oldpos(old_pos.x, 0.0, 0); // Undo if collision happens
-                    }
-                }
-                if movement_y != 0.0 { // Only check y collision if there was vertical movement
-                    //y collision
-                    if check_collision(player.view_player(), &maze, 1) {
-                        player.set_oldpos(0.0, old_pos.y, 1); // Undo if collision happens
-                    }
-                    if check_collision(player.view_player(), &wall, 1) {
-                        player.set_oldpos(0.0, old_pos.y, 1); // Undo if collision happens
-                    }
-                }
-            //final collision check for end point
-            if check_collision(player.view_player(), &end, 1) {
-                end_box.show();  // Just show the message box
-            }   
+            let oldpos = player.get_oldpos(); // Store old position before movement
+            player.handle_keypresses();
+            if player.move_and_check_x(&maze) {
+                println!("Collision on X axis");
+                player.set_x(oldpos.x);
+            };
+            if player.move_and_check_y(&maze) {
+                println!("Collision on Y axis");
+                player.set_y(oldpos.y);
+            };
         }
         if btn_return.click() {
             return "screen1".to_string();
