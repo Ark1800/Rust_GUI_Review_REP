@@ -8,6 +8,7 @@ mod modules;
 mod screen1;
 mod screen2;
 use macroquad::prelude::*;
+
 /// Set up window settings before the app runs
 fn window_conf() -> Conf {
     Conf {
@@ -24,6 +25,18 @@ fn window_conf() -> Conf {
 
 #[macroquad::main(window_conf)]
 async fn main() {
+    /*
+    //texture manager
+    let tm = TextureManager::new();
+    let loading_options = LoadingScreenOptions {
+       title: Some("Maze Game".to_string()),
+       background_color: DARKBLUE,
+       bar_fill_color: GOLD,
+       // Use default values for other options
+       ..Default::default()
+    };
+    //tm.preload_with_loading_screen(&all_assets, Some(loading_options)).await;
+    */
     let mut current_screen = "screen1".to_string();
     let mut last_switch = get_time() - 0.02;
 

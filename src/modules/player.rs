@@ -51,18 +51,24 @@ impl Player {
         self.movement = movement;
     }
 
-    pub fn move_and_check_x(&mut self, img2: &StillImage) -> bool {
-        let mut collided = false; // Placeholder for collision check
+    pub fn move_x(&mut self) {
         self.view.set_x(self.view.get_x() + self.movement.x);
+    }
+
+    pub fn move_y(&mut self) {
+        self.view.set_y(self.view.get_y() + self.movement.y);
+    }
+
+    pub fn check_x_collision(&self, img2: &StillImage) -> bool {
+        let mut collided = false; // Placeholder for collision check
         if check_collision(self.view_player(), img2, 1) {
             collided = true;
         }
         collided
     }
 
-    pub fn move_and_check_y(&mut self, img2: &StillImage) -> bool {
+    pub fn check_y_collision(&self, img2: &StillImage) -> bool {
         let mut collided = false; // Placeholder for collision check
-        self.view.set_y(self.view.get_y() + self.movement.y);
         if check_collision(self.view_player(), img2, 1) {
             collided = true;
         }

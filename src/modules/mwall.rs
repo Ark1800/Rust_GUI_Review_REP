@@ -1,13 +1,13 @@
 use macroquad::prelude::*;
 use crate::modules::still_image::StillImage;
 
-pub struct mwall {
+pub struct Mwall {
     view: StillImage,
     move_speed: f32,
     movement: Vec2,
 }
 
-impl mwall {
+impl Mwall {
     pub async fn new(image_path: &str, width: f32, height: f32, x: f32, y: f32) -> Self {
         let view = StillImage::new(
             image_path,
@@ -19,7 +19,7 @@ impl mwall {
             1.0,    // Normal zoom (100%)
         ).await;
 
-        mwall {
+        Mwall {
             view,
             move_speed: 50.0, // Movement speed in pixels per second
             movement: vec2(0.0, 0.0),
@@ -34,6 +34,19 @@ impl mwall {
         }
     }
 
+    #[allow(dead_code)]
+    pub fn move_leftright(&mut self, first_pos: Vec2) {
+        self.movement.x = self.move_speed * get_frame_time();
+        self.view.set_x(self.view.get_x() + self.movement.x);
+        if self.view.get_x() >= first_pos.x + 100.0 || self.view.get_x() <= first_pos.x - 100.0 {
+            self.move_speed = -self.move_speed; // Move left
+        }
+     }
+
+     pub fn draw(&self) {
+        self.view.draw();
+    }
+
     pub fn set_y(&mut self, new_y: f32) {
         self.view.set_y(new_y);
     }
@@ -42,12 +55,7 @@ impl mwall {
         vec2(self.view.get_x(), self.view.get_y())
     }
 
-    pub fn draw(&self) {
-        self.view.draw();
-    }
-
-    pub fn view_player(&self) -> &StillImage {
+    pub fn view_mwall(&self) -> &StillImage {
         &self.view
     }
-
 }

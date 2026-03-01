@@ -22,3 +22,4 @@ pub mod scale;
 pub mod messagebox;
 pub mod player;
 pub mod mwall;
+pub mod preload_image;
