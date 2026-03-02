@@ -5,7 +5,6 @@ use crate::modules::label::Label;
 use crate::modules::text_button::TextButton;
 use crate::modules::messagebox::{MessageBox, MessageBoxResult};
 use crate::modules::scale::use_virtual_resolution;
-use crate::modules::grid::draw_grid;
 use crate::modules::player::Player;
 //TO DOOOO
 //1. add preloading
@@ -104,11 +103,15 @@ pub async fn run() -> String {
             }
             //y move and collision
             player.move_y();
-            if player.check_y_collision(&mwall.view_mwall()) || player.check_y_collision(&maze) || player.check_y_collision(&wall) {
+            if player.check_y_collision(&maze) || player.check_y_collision(&wall) {
                 player.set_y(oldpos.y); // Revert to old y position on collision
             }
             if player.check_y_collision(&locked_door) && !key_collected {
                 player.set_y(oldpos.y); // Revert to old y position on collision
+            }
+            if player.check_y_collision(&mwall.view_mwall()) {
+                player.set_y(oldpos.y); // Revert to old y position on collision
+                player.set_x(oldpos.x-15.0); // Revert to old x position on collision
             }
             //any collision
             if player.check_x_collision(&end) || player.check_y_collision(&end) {
@@ -135,7 +138,6 @@ pub async fn run() -> String {
         lbl_time_num.draw();
         lbl_time_str.draw();
         end_box.centered();  // Center the message box on screen
-        draw_grid(50.0, LIGHTGRAY);
         // message box handling
         if let Some(result) = end_box.draw() {
             match result {

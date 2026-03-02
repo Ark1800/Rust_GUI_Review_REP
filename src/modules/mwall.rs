@@ -21,16 +21,26 @@ impl Mwall {
 
         Mwall {
             view,
-            move_speed: 50.0, // Movement speed in pixels per second
+            move_speed: 200.0, // Movement speed in pixels per second
             movement: vec2(0.0, 0.0),
         }
     }
 
     pub fn move_updown(&mut self, first_pos: Vec2) {
+        let min_y = first_pos.y - 100.0;
+        let max_y = first_pos.y + 100.0;
+
         self.movement.y = self.move_speed * get_frame_time();
-        self.set_y(self.view.get_y() + self.movement.y);
-        if self.view.get_y() >= first_pos.y + 100.0 || self.view.get_y() <= first_pos.y - 100.0 {
-            self.move_speed = -self.move_speed; // Move up
+        let next_y = self.view.get_y() + self.movement.y;
+
+        if next_y >= max_y {
+            self.set_y(max_y);
+            self.move_speed = -self.move_speed.abs();
+        } else if next_y <= min_y {
+            self.set_y(min_y);
+            self.move_speed = self.move_speed.abs();
+        } else {
+            self.set_y(next_y);
         }
     }
 
