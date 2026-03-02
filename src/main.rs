@@ -8,6 +8,8 @@ mod modules;
 mod screen1;
 mod screen2;
 use macroquad::prelude::*;
+use crate::modules::preload_image::TextureManager;
+use crate::modules::preload_image::LoadingScreenOptions; // If you want to customize the loading screen
 
 /// Set up window settings before the app runs
 fn window_conf() -> Conf {
@@ -25,9 +27,9 @@ fn window_conf() -> Conf {
 
 #[macroquad::main(window_conf)]
 async fn main() {
-    /*
-    //texture manager
+    let all_assets = vec!["assets/king.png","assets/maze.png","assets/end.png","assets/locked_door.png","assets/key.png",];
     let tm = TextureManager::new();
+    // Using custom loading screen appearance
     let loading_options = LoadingScreenOptions {
        title: Some("Maze Game".to_string()),
        background_color: DARKBLUE,
@@ -35,8 +37,7 @@ async fn main() {
        // Use default values for other options
        ..Default::default()
     };
-    //tm.preload_with_loading_screen(&all_assets, Some(loading_options)).await;
-    */
+    tm.preload_with_loading_screen(&all_assets, Some(loading_options)).await;
     let mut current_screen = "screen1".to_string();
     let mut last_switch = get_time() - 0.02;
 
