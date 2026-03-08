@@ -6,9 +6,6 @@ use crate::modules::text_button::TextButton;
 use crate::modules::messagebox::{MessageBox, MessageBoxResult};
 use crate::modules::scale::use_virtual_resolution;
 use crate::modules::player::Player;
-//TO DOOOO
-//1. add preloading
-//2. fix dead code 
 
 pub async fn run() -> String {
     // Define virtual resolution constants
